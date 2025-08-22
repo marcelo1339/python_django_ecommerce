@@ -18,10 +18,14 @@ from django.contrib import admin
 from django.urls import path
 from debug_toolbar.toolbar import debug_toolbar_urls
 from django.conf.urls.static import static
+from django.conf.urls import include
 from django.conf import settings
 
 urlpatterns = [
+    path('perfil/', include('perfil.urls')),
+    path('pedido/', include('pedido.urls')),
     path('admin/', admin.site.urls),
+    path('', include('produto.urls')),
 
 
 ] + debug_toolbar_urls() #TODO: Remover debug toolbar
