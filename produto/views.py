@@ -115,14 +115,48 @@ class AdicionarCarrinho(View):
 
 class RemoverCarrinho(View):
     def get(self, *args, **kwargs):
-        return HttpResponse('Remover Carrinho')
+        http_referer = self.request.META.get(
+            'HTTP_REFERER',
+            reverse('produto:lista')
+        )
+
+        del_prod_slug = self.request.GET.get('slug')
+        del_prod_variacao = self.request.GET.get('vid')
+
+        if not del_prod_variacao or \
+        not self.request.session.get('carrinho') or \
+        del_prod_variacao not in self.request.session['carrinho'].keys():
+            return redirect(http_referer)
+
+       
+        qtd_item = self.request.session['carrinho'][del_prod_variacao]['quantidade']
+        if qtd_item <= 1:
+            del self.request.session['carrinho'][f'{del_prod_variacao}']
+        else:
+            self.request.session['carrinho'][f'{del_prod_variacao}']['quantidade'] -= 1
+
+        self.request.session.save()
+
+        del_variacao_nome = get_object_or_404(models.Variacao, pk=del_prod_variacao).nome
+        messages.success(
+            self.request,
+            f'Produto: "{del_prod_slug}" - Variação: "{del_variacao_nome}" removido com sucesso!'
+        )
+
+        return redirect('produto:carrinho')
+
 
 
 class Carrinho(View):
     def get(self, *args, **kwargs):
+        contexto = {
+            'carrinho': self.request.session.get('carrinho', {})
+        }
+        
         return render(
             self.request,
-            'produto/carrinho.html'
+            'produto/carrinho.html',
+            context=contexto,
         )
 
 class Finalizar(View):
