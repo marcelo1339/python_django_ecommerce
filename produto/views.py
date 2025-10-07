@@ -25,11 +25,7 @@ class DetalheProduto(DetailView):
 
 class AdicionarCarrinho(View):
     def get(self, *args, **kwargs):
-        # TODO: Remover esse pedaço
-        # if self.request.session.get('carrinho'):
-        #     del self.request.session['carrinho']
-        #     self.request.session.save()
-
+  
         http_referer = self.request.META.get(
             'HTTP_REFERER',
             reverse('produto:lista')
@@ -37,10 +33,12 @@ class AdicionarCarrinho(View):
 
         variacao_id = self.request.GET.get('vid')
 
+        print('>>>>>>>>variacao_id', variacao_id)
+
         if not variacao_id:
             messages.error(self.request, 'Produto não existe')
             return redirect(http_referer)
-        
+        print(self.request)
         variacao = get_object_or_404(models.Variacao, id=variacao_id)
         variacao_estoque = variacao.estoque
 

@@ -39,7 +39,6 @@ class Produto(models.Model):
         original_width, original_height = pil_img.size
         
         if original_width <= new_width:
-            print('Menor ou igual primeira largura')
             pil_img.close()
             return
 
