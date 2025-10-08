@@ -5,6 +5,8 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.urls import reverse
 from . import models
+from utils import utils
+
 
 # Create your views here.
 
@@ -33,12 +35,10 @@ class AdicionarCarrinho(View):
 
         variacao_id = self.request.GET.get('vid')
 
-        print('>>>>>>>>variacao_id', variacao_id)
-
         if not variacao_id:
             messages.error(self.request, 'Produto não existe')
             return redirect(http_referer)
-        print(self.request)
+
         variacao = get_object_or_404(models.Variacao, id=variacao_id)
         variacao_estoque = variacao.estoque
 
@@ -132,6 +132,9 @@ class RemoverCarrinho(View):
             del self.request.session['carrinho'][f'{del_prod_variacao}']
         else:
             self.request.session['carrinho'][f'{del_prod_variacao}']['quantidade'] -= 1
+
+        carrinho = self.request.session['carrinho']
+        utils.calculate_price_quantitative(carrinho)
 
         self.request.session.save()
 
