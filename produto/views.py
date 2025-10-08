@@ -160,6 +160,6 @@ class Carrinho(View):
             context=contexto,
         )
 
-class Finalizar(View):
+class ResumoDaCompra(View):
     def get(self, *args, **kwargs):
         return HttpResponse('Finalizar')
