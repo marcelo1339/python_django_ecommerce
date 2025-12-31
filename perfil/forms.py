@@ -53,6 +53,7 @@ class UserForm(forms.ModelForm):
         error_msg_email_exists = 'E-mail já existe.'
         error_msg_password_match = 'Senhas não coincidem.'
         error_msg_password_short = 'Senha deve ser pelo menos igual a 6 caracteres.'
+        error_msg_required_field = 'Este campo é obrigatório.'
 
         if self.usuario:
             if usuario_db:
@@ -72,7 +73,23 @@ class UserForm(forms.ModelForm):
                     validation_error_msgs['password'] = error_msg_password_short
 
         else:
-            validation_error_msgs['username'] = 'Bla bla '
+            if usuario_db:
+                validation_error_msgs['username'] = error_msg_user_exists
+        
+            if email_db:
+                validation_error_msgs['email'] = error_msg_email_exists
+
+            if not password_data:
+                validation_error_msgs['password'] = error_msg_required_field
+            if not password2_data:
+                validation_error_msgs['password2'] = error_msg_required_field
+
+            if password_data == password2_data:
+                validation_error_msgs['password'] = error_msg_password_match
+                validation_error_msgs['password2'] = error_msg_password_match
+        
+            if len(password_data) < 6:
+                validation_error_msgs['password'] = error_msg_password_short
 
         if validation_error_msgs:
             raise(forms.ValidationError(validation_error_msgs))

@@ -5,20 +5,27 @@
 
     <div class="row">
         
-        <div class="col-lg">
-            <h1>Login</h1>
-
-
-        </div>
+        {% if not request.user.is_authenticated %}
+            <div class="col-lg mt-3">
+                <h4>Login</h4>
+                <p>Se você já fez cadastro, basta entrar com usuário e senha abaixo:</p>
+                
+            </div>
+        {% endif %}
         
-        <div class="col-lg">
-            <h1>Cadastro</h1>
+        <div class="col-lg mt-3">
             
+            {% block titulo_cadastro %}
+                <h4>Cadastro</h4>
+                <p>Realizar cadastro no formulário a seguir:</p>
+            {% endblock %}
+
             <form method="post">
 
                 {% csrf_token %}
 
                 {{userform | crispy}}
+                {{perfilform | crispy}}
 
                 <div class="row">
                     <div class="col">
