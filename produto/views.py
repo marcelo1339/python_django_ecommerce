@@ -4,9 +4,10 @@ from django.views import View
 from django.http import HttpResponse
 from django.contrib import messages
 from django.urls import reverse
+
 from . import models
 from utils import utils
-
+from perfil.models import Perfil
 
 # Create your views here.
 
@@ -162,4 +163,22 @@ class Carrinho(View):
 
 class ResumoDaCompra(View):
     def get(self, *args, **kwargs):
-        return HttpResponse('Finalizar')
+
+        if not self.request.user.is_authenticated:
+            return redirect('perfil:criar')
+        
+        perfil = Perfil.objects.filter(usuario=self.request.user).exists()
+
+        if not perfil:
+            messages.error(self.request, 'Usuário sem perfil.')
+            return redirect('perfil:criar')
+        
+        if not self.request.session.get('carrinho'):
+            messages.error(self.request, 'Seu carrinho está vazio.')
+            redirect('produto:lista')
+
+        contexto = {
+            'usuario': self.request.user,
+            'carrinho': self.request.session.get('carrinho'),
+        }
+        return render(self.request, 'produto/resumo-compra.html', context=contexto)
