@@ -9,7 +9,7 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
-                
+
                 {% if request.user.is_authenticated %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -17,6 +17,7 @@
                             Conta
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{% url 'pedido:lista' %}">Meus Pedidos</a>
                             <a class="dropdown-item" href="{% url 'perfil:criar' %}">Atualizar Dados</a>
                             <a class="dropdown-item" href="{% url 'perfil:logout' %}">Sair</a>
                         </div>
