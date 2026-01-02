@@ -28,7 +28,7 @@ urlpatterns = [
     path('', include('produto.urls')),
 
 
-] + debug_toolbar_urls() #TODO: Remover debug toolbar
+]
 
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
